@@ -1,17 +1,25 @@
-
 const startRecording = document.querySelector('#startRecording');
 const stopRecording = document.querySelector('#stopRecording');
 const playRecorded = document.querySelector('#playRecorded');
+const stopRecorded = document.querySelector('#stopRecorded');
+
 const canvas = document.querySelector('.visualizer');
 const canvasCtx = canvas.getContext("2d");
 const pitchInput = document.querySelector('#pitch');
 const pitchLabel = document.querySelector('#pitchLabel');
+
+startRecording.addEventListener("click", async () => {
+    await Tone.start();
+    console.log("context started");
+});
 
 pitchInput.addEventListener('input', function () {
     pitchLabel.innerHTML = pitchInput.value;
 }, false);
 
 let audioCtx;
+let pitchShift;
+let player;
 
 if (navigator.mediaDevices.getUserMedia) {
 
@@ -37,23 +45,24 @@ if (navigator.mediaDevices.getUserMedia) {
 
         playRecorded.addEventListener('click', function () {
             playRecorded.disabled = true;
-            audio.play();
+            stopRecorded.disabled = false;
+            player.loop = true;
+            player.start();
         });
 
-        const audio = document.createElement('audio');
-        audio.setAttribute('controls', '')
-
-        audio.addEventListener("ended", function (e) {
+        stopRecorded.addEventListener('click', function () {
+            stopRecorded.disabled = true;
             startRecording.disabled = false;
-            stopRecording.disabled = true;
-            playRecorded.disabled = true;
-        })
+            player.stop();           
+        });
 
         mediaRecorder.onstop = function (e) {
             const blob = new Blob(chunks, { 'type': 'audio/ogg; codecs=opus' });
             chunks = [];
             const audioURL = window.URL.createObjectURL(blob);
-            audio.src = audioURL;
+            pitchShift = new Tone.PitchShift().toDestination();
+            pitchShift.pitch = parseFloat(pitchInput.value);
+            player = new Tone.Player(audioURL).connect(pitchShift);
         }
 
         mediaRecorder.ondataavailable = function (e) {
@@ -95,7 +104,7 @@ function visualize(stream) {
 
         analyser.getByteTimeDomainData(dataArray);
 
-        canvasCtx.fillStyle = 'rgb(200, 200, 200)';
+        canvasCtx.fillStyle = 'rgba(200, 200, 200, 0.05)';
         canvasCtx.fillRect(0, 0, WIDTH, HEIGHT);
 
         canvasCtx.lineWidth = 2;
