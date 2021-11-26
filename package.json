@@ -1,0 +1,22 @@
+{
+  "name": "glu-recordaudioandplaywithpitch",
+  "version": "1.0.0",
+  "description": "Record audio and playback with a pitch.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/martijnkunstman/GLU-recordAudioAndPlayWithPitch.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/martijnkunstman/GLU-recordAudioAndPlayWithPitch/issues"
+  },
+  "homepage": "https://github.com/martijnkunstman/GLU-recordAudioAndPlayWithPitch#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

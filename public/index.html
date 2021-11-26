@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio record an payback with a pitch</title>
+</head>
+<body>
+    <div style="text-align: center;">
+        <button id="startRecording">start recording audio</button>
+        <button id="stopRecording" disabled>stop recording audio</button>
+        <button id="playRecorded" disabled>play recorded audio with a pitch</button>
+        <br>
+        <input type="range" id="pitch" name="pitch" min="-10" max="10" step="1">
+        <br>
+        <div id="pitchLabel" for="pitch">pitch</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
