@@ -4,14 +4,27 @@ const playRecorded = document.querySelector('#playRecorded');
 const stopRecorded = document.querySelector('#stopRecorded');
 const pitchInput = document.querySelector('#pitch');
 const pitchLabel = document.querySelector('#pitchLabel');
+const phaserInput = document.querySelector('#phaser');
+const phaserLabel = document.querySelector('#phaserLabel');
 const constraints = { audio: true };
 
 let pitchShift;
+let phaser;
 let player;
 let chunks = [];
 
 pitchInput.addEventListener('input', function () {
     pitchLabel.innerHTML = pitchInput.value;
+    if (pitchShift) {
+        pitchShift.pitch = parseFloat(pitchInput.value);
+    }
+}, false);
+
+phaserInput.addEventListener('input', function () {
+    phaserLabel.innerHTML = phaserInput.value;
+    if (phaser) {
+        phaser.octaves = parseFloat(phaserInput.value)
+    }
 }, false);
 
 if (navigator.mediaDevices.getUserMedia) {
@@ -51,7 +64,14 @@ if (navigator.mediaDevices.getUserMedia) {
             const audioURL = window.URL.createObjectURL(blob);
             pitchShift = new Tone.PitchShift().toDestination();
             pitchShift.pitch = parseFloat(pitchInput.value);
+            phaser = new Tone.Phaser({
+                frequency: 15,
+                octaves: phaserInput.value,
+                baseFrequency: 1000
+            }).toDestination();
+            phaser.octaves = parseFloat(phaserInput.value)
             player = new Tone.Player(audioURL).connect(pitchShift);
+            player.connect(phaser);
         }
 
         mediaRecorder.ondataavailable = function (e) {
